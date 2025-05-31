@@ -19,6 +19,70 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
   },
+  {
+    path: 'country-list',
+    loadChildren: () => import('./countries/country-list/country-list.module').then( m => m.CountryListPageModule)
+  },
+  {
+    path: 'city-list',
+    loadChildren: () => import('./countries/city-list/city-list.module').then( m => m.CityListPageModule)
+  },
+  {
+    path: 'place-list',
+    loadChildren: () => import('./places/place-list/place-list.module').then( m => m.PlaceListPageModule)
+  },
+  {
+    path: 'place-detail',
+    loadChildren: () => import('./places/place-detail/place-detail.module').then( m => m.PlaceDetailPageModule)
+  },
+  {
+    path: 'famous-list',
+    loadChildren: () => import('./famous/famous-list/famous-list.module').then( m => m.FamousListPageModule)
+  },
+  {
+    path: 'famous-detail',
+    loadChildren: () => import('./famous/famous-detail/famous-detail.module').then( m => m.FamousDetailPageModule)
+  },
+  {
+    path: 'tag',
+    loadChildren: () => import('./famous/tag/tag.module').then( m => m.TagPageModule)
+  },
+  {
+    path: 'food-list',
+    loadChildren: () => import('./foods/food-list/food-list.module').then( m => m.FoodListPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./users/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'favorites',
+    loadChildren: () => import('./users/favorites/favorites.module').then( m => m.FavoritesPageModule)
+  },
+  {
+    path: 'routes',
+    loadChildren: () => import('./users/routes/routes.module').then( m => m.RoutesPageModule)
+  },
+  {
+    path: 'visit-list',
+    loadChildren: () => import('./visits/visit-list/visit-list.module').then( m => m.VisitListPageModule)
+  },
+  {
+    path: 'top-places',
+    loadChildren: () => import('./statistics/top-places/top-places.module').then( m => m.TopPlacesPageModule)
+  },
+  {
+    path: 'fame-types',
+    loadChildren: () => import('./statistics/fame-types/fame-types.module').then( m => m.FameTypesPageModule)
+  },
+  {
+    path: 'custom-query1',
+    loadChildren: () => import('./statistics/custom-query1/custom-query1.module').then( m => m.CustomQuery1PageModule)
+  },
+  {
+    path: 'custom-query2',
+    loadChildren: () => import('./statistics/custom-query2/custom-query2.module').then( m => m.CustomQuery2PageModule)
+  },
 ];
 
 @NgModule({
