@@ -1,20 +1,67 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <h2>Bienvenido👋</h2>
+  
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+        <ion-card routerLink="/country-list">
+          <ion-card-header>
+            <ion-card-title>Países</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card routerLink="/country-list">
+          <ion-card-header>
+            <ion-card-title>CAMARA</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      
+
+      <ion-col size="6">
+        <ion-card routerLink="/visits">
+          <ion-card-header>
+            <ion-card-title>Mis visitas</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card routerLink="/tag">
+          <ion-card-header>
+            <ion-card-title>Mis tags</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card routerLink="/favorites">
+          <ion-card-header>
+            <ion-card-title>Favoritos</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12">
+        <ion-card routerLink="/routes">
+          <ion-card-header>
+            <ion-card-title>Mi ruta turística</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-button expand="full" color="danger" >
+    Cerrar sesión
+  </ion-button>
 </ion-content>

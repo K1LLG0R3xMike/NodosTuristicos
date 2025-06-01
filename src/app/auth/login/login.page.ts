@@ -24,17 +24,19 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   async onLogin() {
+    if (this.loginForm.invalid) return;
+
     this.authService.login(this.loginForm.value).subscribe({
       next: async (res: any) => {
         await this.authService.setToken(res.token);
-        this.router.navigate(['/tabs']);
+        this.router.navigate(['/tabs']); // Redirige a la app principal
       },
       error: (err: any) => {
-        console.error('Login failed', err);
+        console.error('❌ Login fallido', err);
+        alert('Credenciales incorrectas o error de conexión');
       }
     });
   }
