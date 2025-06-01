@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-tag',
   templateUrl: './tag.page.html',
   styleUrls: ['./tag.page.scss'],
+  standalone: false
 })
 export class TagPage implements OnInit {
 

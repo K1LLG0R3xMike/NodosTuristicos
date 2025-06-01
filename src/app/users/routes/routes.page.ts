@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-routes',
   templateUrl: './routes.page.html',
   styleUrls: ['./routes.page.scss'],
+  standalone: false
 })
 export class RoutesPage implements OnInit {
 

@@ -7,6 +7,7 @@ import { AuthService } from '../auth.service'; // Adjust the path as needed
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
+  standalone: false
 })
 export class LoginPage implements OnInit {
 

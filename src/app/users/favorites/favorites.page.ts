@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
+  standalone: false
 })
 export class FavoritesPage implements OnInit {
 

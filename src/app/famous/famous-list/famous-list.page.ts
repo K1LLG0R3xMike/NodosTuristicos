@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-famous-list',
   templateUrl: './famous-list.page.html',
   styleUrls: ['./famous-list.page.scss'],
+  standalone: false
 })
 export class FamousListPage implements OnInit {
 

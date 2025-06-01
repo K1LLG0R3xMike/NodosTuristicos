@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-city-list',
   templateUrl: './city-list.page.html',
   styleUrls: ['./city-list.page.scss'],
+  standalone: false
 })
 export class CityListPage implements OnInit {
 

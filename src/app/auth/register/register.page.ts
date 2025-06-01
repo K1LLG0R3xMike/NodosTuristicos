@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
+  standalone: false
 })
 export class RegisterPage implements OnInit {
 

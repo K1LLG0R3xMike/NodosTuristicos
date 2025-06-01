@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-place-detail',
   templateUrl: './place-detail.page.html',
   styleUrls: ['./place-detail.page.scss'],
+  standalone: false
 })
 export class PlaceDetailPage implements OnInit {
 

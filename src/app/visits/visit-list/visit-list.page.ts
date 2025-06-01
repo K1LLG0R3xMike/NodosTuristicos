@@ -6,10 +6,11 @@ import { environment } from 'src/environments/environment';
   selector: 'app-visit-list',
   templateUrl: './visit-list.page.html',
   styleUrls: ['./visit-list.page.scss'],
+  standalone: false
 })
 export class VisitListPage implements OnInit {
 
-  private api = `${environment.apiUrl}/sitios`;
+  private api = `${environment.apiUrl}/`;
 
   constructor(private http: HttpClient) {}
 
