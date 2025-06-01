@@ -1,9 +1,50 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+
+export interface Visit {
+  id?: string;
+  user_id: string;
+  site_id: string;
+  fecha_visita?: string;
+  foto_url?: string;
+  lat?: number;
+  lng?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class VisitService {
+  private apiUrl = `${environment.apiUrl}/visitas`;
 
-  constructor() { }
+  constructor(private http: HttpClient) {}
+
+  // Crear una visita
+  create(visit: Visit): Observable<Visit> {
+    return this.http.post<Visit>(this.apiUrl, visit);
+  }
+
+  // Obtener todas las visitas (admin o historial)
+  getAll(): Observable<Visit[]> {
+    return this.http.get<Visit[]>(this.apiUrl);
+  }
+
+  // Obtener visitas por usuario
+  getByUser(userId: string): Observable<Visit[]> {
+    return this.http.get<Visit[]>(`${this.apiUrl}/usuario/${userId}`);
+  }
+
+  // Obtener visitas por sitio
+  getBySite(siteId: string): Observable<Visit[]> {
+    return this.http.get<Visit[]>(`${this.apiUrl}/sitio/${siteId}`);
+  }
+
+  // Eliminar visita (opcional)
+  delete(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
