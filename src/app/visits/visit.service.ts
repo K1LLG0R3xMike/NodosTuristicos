@@ -16,7 +16,7 @@ export interface Visit {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VisitService {
   private apiUrl = `${environment.apiUrl}/visitas`;
@@ -26,6 +26,23 @@ export class VisitService {
   // Crear una visita
   create(visit: Visit): Observable<Visit> {
     return this.http.post<Visit>(this.apiUrl, visit);
+  }
+
+  createWithImage(visit: Visit, image: File): Observable<Visit> {
+    const formData = new FormData();
+
+    for (const key in visit) {
+      const value = (visit as any)[key];
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    }
+
+    if (image) {
+      formData.append('foto', image);
+    }
+
+    return this.http.post<Visit>(this.apiUrl, formData);
   }
 
   // Obtener todas las visitas (admin o historial)
