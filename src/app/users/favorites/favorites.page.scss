@@ -1,20 +1,21 @@
 ion-content {
-  --background: #2d4263;
+  --background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);
   font-family: 'Roboto', sans-serif;
 }
 
 ion-list {
+  background: transparent;
   margin-top: 12px;
 }
 
 ion-item {
-  --background: #4b6ea8;
+  --background: rgb(28, 28, 29);
   --color: #ffffff;
   border-radius: 10px;
   margin: 10px 0;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out;
-  padding: 12px;
+  
 
   &:hover {
     transform: scale(1.015);
