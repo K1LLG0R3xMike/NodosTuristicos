@@ -1,15 +1,15 @@
 ion-content {
-  --background: #2d4263;
+  --background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);
   font-family: 'Roboto', sans-serif;
 }
 
 ion-list {
-  background: #2d4263;
+  background: transparent;
   margin-top: 12px;
 }
 
 ion-item {
-  --background: #4b6ea8;
+  --background: rgb(28, 28, 29);
   --color: #ffffff;
   border-radius: 10px;
   margin: 8px 0;
