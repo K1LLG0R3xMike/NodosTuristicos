@@ -1,13 +1,22 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>favorites</ion-title>
+    <ion-title>Favoritos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">favorites</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-list *ngIf="favoriteSites.length > 0; else noFavs">
+    <ion-item *ngFor="let site of favoriteSites">
+      <ion-label>
+        <h2>{{ site.name }}</h2>
+        <p>{{ site.type }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noFavs>
+    <ion-text color="light">
+      <p>No tienes sitios guardados como favoritos.</p>
+    </ion-text>
+  </ng-template>
 </ion-content>

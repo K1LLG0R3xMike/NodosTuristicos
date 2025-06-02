@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CountryService, Country } from '../country.service';
 import { City, CityService } from '../city.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-country-list',
@@ -15,7 +16,8 @@ export class CountryListPage implements OnInit {
 
   constructor(
     private countryService: CountryService,
-    private cityService: CityService
+    private cityService: CityService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -28,6 +30,12 @@ export class CountryListPage implements OnInit {
       error: (err) => console.error('[❌] Error cargando países:', err),
     });
   }
+
+  goToPlaceList(cityId: string) {
+  this.router.navigate(['/place-list'], {
+    queryParams: { cityId },
+  });
+}
 
  toggleCountry(countryId: string) {
   console.log(`[📂] Toggle país ID: ${countryId}`);

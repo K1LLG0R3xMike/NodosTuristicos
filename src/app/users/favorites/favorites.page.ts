@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-
+import { Site, SiteService } from 'src/app/places/place.service';
+import { LocalDataService } from 'src/app/core/storage.service';
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
@@ -9,23 +10,16 @@ import { environment } from 'src/environments/environment';
   standalone: false
 })
 export class FavoritesPage implements OnInit {
+  favoriteSites: Site[] = [];
 
-  private api = `${environment.apiUrl}/sitios`;
+  constructor(
+    private siteService: SiteService,
+    private localData: LocalDataService
+  ) {}
 
-  constructor(private http: HttpClient) {}
-
-  getAll() {
-    return this.http.get(this.api);
+  async ngOnInit() {
+    const allSites = await this.siteService.getAll().toPromise();
+    const favIds = await this.localData.getFavorites();
+    this.favoriteSites = (allSites ?? []).filter(site => site.id !== undefined && favIds.includes(site.id as string));
   }
-
-  getById(id: string) {
-    return this.http.get(`${this.api}/${id}`);
-  }
-
-  create(data: any) {
-    return this.http.post(this.api, data);
-  }
-  ngOnInit() {
-  }
-
 }

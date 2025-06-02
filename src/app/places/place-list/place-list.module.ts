@@ -7,13 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { PlaceListPageRoutingModule } from './place-list-routing.module';
 
 import { PlaceListPage } from './place-list.page';
+import { CountryListPage } from 'src/app/countries/country-list/country-list.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PlaceListPageRoutingModule
+    PlaceListPageRoutingModule,
   ],
   declarations: [PlaceListPage]
 })

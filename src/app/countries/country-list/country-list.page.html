@@ -22,6 +22,7 @@
         <ion-item
           lines="none"
           *ngFor="let city of citiesByCountry[country.id] || []"
+          (click)="goToPlaceList(city.id!)"
         >
           <ion-label>{{ city.name }}</ion-label>
         </ion-item>
