@@ -1,59 +1,100 @@
-:host {
-  color: #fff;
-  height: 100%;
-  
-  flex-direction: column;
-}
-
-ion-header {
-  --background: transparent;
-  --color: #ffffff;
-  text-align: center;
-}
-
-ion-title {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
 ion-content {
-  --background: linear-gradient( 150deg , #2d4263 30%, #000000 90%);  
+  --background: linear-gradient(135deg, #13547a 0%, #80d0c7 100%);
+}
+
+.login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  height: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-form {
-  width: 90%;
-  max-width: 360px;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 24px;
-  border-radius: 12px;
-  background: transparent;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  
+  h1 {
+    color: white;
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  }
+}
+
+ion-card {
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+ion-card-title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 ion-item {
-  --background: transparent;
-  --color: #fff;
-  color: #fff;
-  border-bottom: 1px solid #ffffff33;
+  --border-radius: 8px;
+  margin-bottom: 10px;
+  --background: #f7f9fc;
+  
+  // Mejorar visibilidad de las etiquetas
+  --highlight-color-focused: var(--ion-color-primary);
+  
+  ion-label {
+    --color: #555555;
+    font-weight: 500;
+  }
+  
+  ion-input {
+    --color: #333333;
+    --placeholder-color: #999999;
+    --placeholder-opacity: 1;
+  }
+  
+  ion-icon {
+    color: var(--ion-color-medium);
+    margin-right: 8px;
+  }
 }
 
-ion-label,
-ion-input {
-  color: #ffffff;
+// Estilos específicos para cuando las etiquetas están flotando
+ion-item.item-has-focus ion-label {
+  color: var(--ion-color-primary);
 }
 
-ion-note {
-  margin-left: 8px;
-  font-size: 0.8rem;
+.error-message {
+  padding-left: 16px;
+  font-size: 12px;
+  height: 18px;
+  
+  p {
+    margin: 0;
+  }
 }
 
 ion-button {
-  margin-top: 20px;
-  width: 70%;
-  align-self: center;
+  --border-radius: 8px;
+  font-weight: 600;
+  height: 48px;
+  margin: 20px 0;
+}
+
+a {
+  display: block;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 5px;
+}
+
+// Animación de entrada con fadeIn
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+ion-card {
+  animation: fadeIn 0.6s ease-out forwards;
 }
