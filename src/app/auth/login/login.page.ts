@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../auth.service'; // Adjust the path as needed
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,34 +10,35 @@ import { AuthService } from '../auth.service'; // Adjust the path as needed
   standalone: false
 })
 export class LoginPage implements OnInit {
-
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {
-    this.loginForm = this.fb.group({
+  ) { }
+
+  ngOnInit() {
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  ngOnInit() {}
-
-  async onLogin() {
-    if (this.loginForm.invalid) return;
-
-    this.authService.login(this.loginForm.value).subscribe({
-      next: async (res: any) => {
-        await this.authService.setToken(res.token);
-        this.router.navigate(['/tabs']); // Redirige a la app principal
-      },
-      error: (err: any) => {
-        console.error('❌ Login fallido', err);
-        alert('Credenciales incorrectas o error de conexión');
-      }
-    });
+  onSubmit() {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: async (response: any) => {
+          if (response && response.token) {
+            await this.authService.setToken(response.token);
+            console.log('Login successful', response);
+            this.router.navigate(['/home']);
+          }
+        },
+        error: (error) => {
+          console.error('Login failed', error);
+        }
+      });
+    }
   }
 }
