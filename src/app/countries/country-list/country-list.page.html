@@ -4,8 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-list *ngIf="countries.length > 0; else noData">
+<ion-content class="ion-padding" >
+  <ion-list *ngIf="countries.length > 0; else noData"  style="background-color: transparent;">
 
     <ng-container *ngFor="let country of countries">
       <!-- País -->
@@ -18,11 +18,12 @@
       </ion-item>
 
       <!-- Ciudades del país seleccionado -->
-      <div *ngIf="expandedCountryId === country.id" class="city-dropdown">
+      <div *ngIf="expandedCountryId === country.id" class="city-dropdown" >
         <ion-item
           lines="none"
           *ngFor="let city of citiesByCountry[country.id] || []"
           (click)="goToPlaceList(city.id!)"
+          
         >
           <ion-label>{{ city.name }}</ion-label>
         </ion-item>

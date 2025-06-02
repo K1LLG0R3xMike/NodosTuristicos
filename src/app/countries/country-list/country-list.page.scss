@@ -1,14 +1,14 @@
 ion-content {
-  --background: #2d4263;
+  --background: linear-gradient( 150deg , #2d4263 30%, #000000 90%);  
   font-family: 'Roboto', sans-serif;
 }
 
 ion-item {
-  --background: #4b6ea8;
+  --background: transparent;
   --color: #ffffff;
   border-radius: 10px;
   margin: 6px 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.489);
   transition: transform 0.2s ease;
 
   &:hover {
@@ -22,18 +22,18 @@ ion-item {
 }
 
 .city-dropdown {
-  background: #2d4263;
   margin: -4px 12px 12px;
   padding: 6px 12px 8px;
   border-left: 4px solid #2d4263;
   border-radius: 0 0 10px 10px;
 
   ion-item {
-    --background: #2d4263;
+    background: transparent;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.753);
+
     --color: #ffffff;
     padding-left: 16px;
     font-size: 0.95rem;
-    box-shadow: none;
   }
 }
 

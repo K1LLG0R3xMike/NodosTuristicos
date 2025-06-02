@@ -1,11 +1,11 @@
 :host {
-  --ion-background-color: #2d4263;
   --ion-text-color: #ffffff;
 }
 
 ion-content {
   --padding-top: 16px;
   --padding-bottom: 16px;
+  --background: linear-gradient( 150deg , #2d4263 30%, #000000 90%);  
 }
 
 h2 {
@@ -15,16 +15,17 @@ h2 {
 }
 
 p {
-  color: #666;
+  color: #ccc;
   font-size: 0.9rem;
   margin-bottom: 16px;
 }
 
 ion-card {
   border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.66);
   transition: transform 0.2s ease-in-out;
-  background-color: #446599;
+  background-color: transparent;
+  //background-color: #446599;
   text-align: center;
 
   &:hover {
