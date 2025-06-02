@@ -31,8 +31,15 @@ export class VisitListPage implements OnInit {
   }
 
   loadVisitas() {
-    this.visitService.getAll().subscribe((data) => {
-      this.visitas = data;
+    this.visitService.getAll().subscribe({
+      next: (visitas) => {
+        console.log('Visitas cargadas:', visitas);
+        this.visitas = visitas;
+      },
+      error: (error) => {
+        console.error('Error al cargar visitas:', error);
+        alert('Error al cargar las visitas');
+      }
     });
   }
 
@@ -115,5 +122,20 @@ export class VisitListPage implements OnInit {
   removeImage() {
     this.imageFile = null;
     this.imagePreview = null;
+  }
+
+  // Métodos auxiliares para el template
+  getSiteName(siteId: any): string {
+    if (typeof siteId === 'object' && siteId?.name) {
+      return siteId.name;
+    }
+    return 'Sitio desconocido';
+  }
+
+  getUserName(userId: any): string | null {
+    if (typeof userId === 'object' && userId?.nombre) {
+      return userId.nombre;
+    }
+    return null;
   }
 }

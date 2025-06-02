@@ -90,12 +90,19 @@
   </ion-card>
 
   <!-- Lista de visitas -->
-  <ion-list>
-    <ion-item *ngFor="let visita of visitas">
-      <ion-label>
-        <p>{{ visita.site_id }}</p>
-        <p>{{ visita.fecha_visita | date }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+ 
+<!-- Lista de visitas -->
+<!-- Lista de visitas -->
+<ion-list>
+  <ion-item *ngFor="let visita of visitas">
+    <ion-label>
+      <h2>{{ getSiteName(visita.site_id) }}</h2>
+      <p>{{ visita.fecha_visita | date:'medium' }}</p>
+      <p *ngIf="getUserName(visita.user_id)">Visitado por: {{ getUserName(visita.user_id) }}</p>
+    </ion-label>
+    <ion-button fill="clear" slot="end" *ngIf="visita.foto_url" >
+      <ion-icon name="image"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-list>
 </ion-content>

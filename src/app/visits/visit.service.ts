@@ -4,15 +4,23 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface Visit {
-  id?: string;
-  user_id: string;
-  site_id: string;
-  fecha_visita?: string;
+  _id?: string;
+  user_id: string | {
+    id: string;
+    nombre: string;
+    email: string;
+  };
+  site_id: string | {
+    id: string;
+    name: string;
+  };
+  fecha_visita: string;
+  lat: number;
+  lng: number;
   foto_url?: string;
-  lat?: number;
-  lng?: number;
   createdAt?: string;
   updatedAt?: string;
+  __v?: number;
 }
 
 @Injectable({
