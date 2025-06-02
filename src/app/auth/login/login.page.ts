@@ -31,7 +31,14 @@ export class LoginPage implements OnInit {
         next: async (response: any) => {
           if (response && response.token) {
             await this.authService.setToken(response.token);
-            console.log('Login successful', response);
+            const userData = {
+              id: response.user.id,
+              email: response.user.email,
+              nombre: response.user.nombre,
+              role: response.user.role || 'USER',
+            };
+            await this.authService.setUserData(userData);
+            console.log('Login successful', userData);
             this.router.navigate(['/home']);
           }
         },

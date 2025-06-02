@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Visit, VisitService } from '../visit.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Geolocation } from '@capacitor/geolocation';
-
+import { AuthService } from 'src/app/auth/auth.service';
+import { SiteService } from 'src/app/places/place.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-visit-list',
   templateUrl: './visit-list.page.html',
@@ -22,25 +24,54 @@ export class VisitListPage implements OnInit {
   imageFile: File | null = null;
   imagePreview: string | null = null;
   isLoadingLocation = false;
+  sites: any[] = [];
 
-  constructor(private visitService: VisitService) {}
+  constructor(private visitService: VisitService,
+    private authService: AuthService,
+    private router: Router,
+    private siteService: SiteService
+  ) { }
 
   ngOnInit() {
     this.loadVisitas();
     this.getCurrentLocation();
+    // Verificar si el usuario está autenticado
+    const userData = this.authService.getUserData();
+    if (!userData || !userData.id) {
+      // Redirigir al usuario a la página de inicio de sesión o mostrar un mensaje de error
+      this.router.navigate(['/login']);
+    }
+
+    // Cargar sitios si es necesario
+    this.siteService.getAll().subscribe({
+      next: (sites) => {
+        console.log('Sitios cargados:', sites);
+        this.sites = sites;
+      },
+      error: (error) => {
+        console.error('Error al cargar sitios:', error);
+        alert('Error al cargar los sitios');
+      }
+    });
   }
 
   loadVisitas() {
-    this.visitService.getAll().subscribe({
-      next: (visitas) => {
-        console.log('Visitas cargadas:', visitas);
-        this.visitas = visitas;
-      },
-      error: (error) => {
-        console.error('Error al cargar visitas:', error);
-        alert('Error al cargar las visitas');
-      }
-    });
+    const userData = this.authService.getUserData();
+    if (userData && userData.id) {
+      this.visitService.getByUser(userData.id).subscribe({
+        next: (visitas) => {
+          console.log('Visitas cargadas:', visitas);
+          this.visitas = visitas;
+        },
+        error: (error) => {
+          console.error('Error al cargar visitas:', error);
+          alert('Error al cargar las visitas');
+        }
+      });
+    } else {
+      console.error('No se pudo obtener el ID del usuario');
+      alert('No se pudo obtener el ID del usuario');
+    }
   }
 
   toggleForm() {
@@ -48,6 +79,14 @@ export class VisitListPage implements OnInit {
     if (this.showForm) {
       this.getCurrentLocation();
       this.newVisit.fecha_visita = new Date().toISOString();
+
+      // Obtener automáticamente el user_id del usuario autenticado
+      const userData = this.authService.getUserData();
+      if (userData && userData.id) {
+        this.newVisit.user_id = userData.id;
+      } else {
+        console.error('No se pudo obtener el ID del usuario');
+      }
     }
   }
 
@@ -58,7 +97,7 @@ export class VisitListPage implements OnInit {
         enableHighAccuracy: true,
         timeout: 10000
       });
-      
+
       this.newVisit.lat = coordinates.coords.latitude;
       this.newVisit.lng = coordinates.coords.longitude;
     } catch (error) {
@@ -80,7 +119,7 @@ export class VisitListPage implements OnInit {
 
       if (image.dataUrl) {
         this.imagePreview = image.dataUrl;
-        
+
         // Convertir dataUrl a File
         const response = await fetch(image.dataUrl);
         const blob = await response.blob();
@@ -98,16 +137,31 @@ export class VisitListPage implements OnInit {
       return;
     }
 
+    if (!this.newVisit.site_id) {
+      alert('Debes seleccionar un sitio');
+      return;
+    }
+
+    if (!this.newVisit.user_id) {
+      const userData = this.authService.getUserData();
+      if (userData && userData.id) {
+        this.newVisit.user_id = userData.id;
+      } else {
+        // Redirigir al usuario a la página de inicio de sesión o mostrar un mensaje de error
+        this.router.navigate(['/login']);
+        return;
+      }
+    }
     this.visitService.createWithImage(this.newVisit, this.imageFile).subscribe({
       next: () => {
         this.loadVisitas();
         this.showForm = false;
-        this.newVisit = { 
-          user_id: '', 
-          site_id: '', 
-          fecha_visita: new Date().toISOString(), 
-          lat: 0, 
-          lng: 0 
+        this.newVisit = {
+          user_id: '',
+          site_id: '',
+          fecha_visita: new Date().toISOString(),
+          lat: 0,
+          lng: 0
         };
         this.imageFile = null;
         this.imagePreview = null;

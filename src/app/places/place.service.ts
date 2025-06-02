@@ -7,7 +7,7 @@ export interface Site {
   id?: string;
   city_id: string;
   name: string;
-  type: 'RESTAURANTE' | 'MUSEO' | 'PARQUE' | 'OTRO';
+  type: string;
   lat: number;
   lng: number;
   qr_code: string;

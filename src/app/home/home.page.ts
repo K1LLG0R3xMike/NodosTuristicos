@@ -19,12 +19,18 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     const token = await this.authService.getToken();
+    const userData = this.authService.getUserData();
+    if (!token || !userData) {
+      this.router.navigate(['/login']);
+      return;
+    }
     // En este punto podrías llamar a /usuarios/me para obtener los datos del perfil
     // Aquí simulo un usuario si no tienes esa ruta aún:
     this.user = {
-      nombre: 'Usuario',
-      email: 'demo@email.com',
-      role: 'USER'
+      id: userData.id,  
+      email: userData.email,
+      nombre: userData.nombre,
+      role: userData.role || 'USER',
     };
   }
 
@@ -32,4 +38,8 @@ export class HomePage implements OnInit {
     await this.authService.logout();
     this.router.navigate(['/login']);
   }
+  getFirstName(): string {
+  if (!this.user || !this.user.nombre) return '';
+  return this.user.nombre.split(' ')[0];
+}
 }

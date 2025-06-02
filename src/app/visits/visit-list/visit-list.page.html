@@ -16,16 +16,23 @@
     <ion-card-header>
       <ion-card-title>Nueva Visita</ion-card-title>
     </ion-card-header>
-    
+
     <ion-card-content>
-      <ion-item>
+      <!-- <ion-item>
         <ion-label position="floating">User ID</ion-label>
         <ion-input [(ngModel)]="newVisit.user_id"></ion-input>
-      </ion-item>
+      </ion-item> -->
 
       <ion-item>
-        <ion-label position="floating">Site ID</ion-label>
-        <ion-input [(ngModel)]="newVisit.site_id"></ion-input>
+        <ion-label position="stacked">Sitio</ion-label>
+        <ion-select
+          [(ngModel)]="newVisit.site_id"
+          placeholder="Selecciona un sitio"
+        >
+          <ion-select-option *ngFor="let site of sites" [value]="site.id">
+            {{ site.name }}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item>
@@ -35,29 +42,22 @@
 
       <ion-item>
         <ion-label position="floating">Latitud</ion-label>
-        <ion-input 
-          type="number" 
-          [(ngModel)]="newVisit.lat" 
-          readonly="true">
+        <ion-input type="number" [(ngModel)]="newVisit.lat" readonly="true">
         </ion-input>
-        <ion-button 
-          fill="clear" 
-          slot="end" 
+        <ion-button
+          fill="clear"
+          slot="end"
           (click)="getCurrentLocation()"
-          [disabled]="isLoadingLocation">
-          <ion-icon 
-            name="location" 
-            [class.spin]="isLoadingLocation">
+          [disabled]="isLoadingLocation"
+        >
+          <ion-icon name="location" [class.spin]="isLoadingLocation">
           </ion-icon>
         </ion-button>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Longitud</ion-label>
-        <ion-input 
-          type="number" 
-          [(ngModel)]="newVisit.lng" 
-          readonly="true">
+        <ion-input type="number" [(ngModel)]="newVisit.lng" readonly="true">
         </ion-input>
       </ion-item>
 
@@ -71,17 +71,21 @@
 
       <!-- Preview de imagen -->
       <div *ngIf="imagePreview" class="image-preview">
-        <img [src]="imagePreview" alt="Preview">
+        <img [src]="imagePreview" alt="Preview" />
         <ion-button fill="clear" size="small" (click)="removeImage()">
           <ion-icon name="close" slot="icon-only"></ion-icon>
         </ion-button>
       </div>
 
       <div class="form-buttons">
-        <ion-button (click)="submitForm()" expand="block" [disabled]="!imageFile">
+        <ion-button
+          (click)="submitForm()"
+          expand="block"
+          [disabled]="!imageFile"
+        >
           Crear Visita
         </ion-button>
-        
+
         <ion-button fill="clear" (click)="toggleForm()" expand="block">
           Cancelar
         </ion-button>
@@ -90,19 +94,25 @@
   </ion-card>
 
   <!-- Lista de visitas -->
- 
-<!-- Lista de visitas -->
-<!-- Lista de visitas -->
-<ion-list>
-  <ion-item *ngFor="let visita of visitas">
-    <ion-label>
-      <h2>{{ getSiteName(visita.site_id) }}</h2>
-      <p>{{ visita.fecha_visita | date:'medium' }}</p>
-      <p *ngIf="getUserName(visita.user_id)">Visitado por: {{ getUserName(visita.user_id) }}</p>
-    </ion-label>
-    <ion-button fill="clear" slot="end" *ngIf="visita.foto_url" >
-      <ion-icon name="image"></ion-icon>
-    </ion-button>
-  </ion-item>
-</ion-list>
+
+  <!-- Lista de visitas -->
+  <!-- Lista de visitas -->
+  <ion-list>
+    <ion-item *ngFor="let visita of visitas">
+      <ion-label>
+        <h2>{{ getSiteName(visita.site_id) }}</h2>
+        <p>{{ visita.fecha_visita | date:'medium' }}</p>
+        <p *ngIf="getUserName(visita.user_id)">
+          Visitado por: {{ getUserName(visita.user_id) }}
+        </p>
+      </ion-label>
+      <div class="thumbnail-container" *ngIf="visita.foto_url" slot="end">
+        <img
+          [src]="visita.foto_url"
+          class="visit-thumbnail"
+          alt="Foto de la visita"
+        />
+      </div>
+    </ion-item>
+  </ion-list>
 </ion-content>

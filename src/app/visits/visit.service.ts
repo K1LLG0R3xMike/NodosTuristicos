@@ -60,7 +60,7 @@ export class VisitService {
 
   // Obtener visitas por usuario
   getByUser(userId: string): Observable<Visit[]> {
-    return this.http.get<Visit[]>(`${this.apiUrl}/usuario/${userId}`);
+    return this.http.get<Visit[]>(`${this.apiUrl}/user/${userId}`);
   }
 
   // Obtener visitas por sitio
