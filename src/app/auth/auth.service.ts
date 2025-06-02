@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private api = `${environment.apiUrl}/user`;
+  private api = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient, private storage: Storage) {
     this.storage.create();
