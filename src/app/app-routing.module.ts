@@ -84,7 +84,11 @@ const routes: Routes = [
   {
     path: 'custom-query2',
     loadChildren: () => import('./statistics/custom-query2/custom-query2.module').then( m => m.CustomQuery2PageModule)
+  },  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
   },
+
 ];
 
 @NgModule({
