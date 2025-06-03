@@ -5,11 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tags</ion-title>
-    </ion-toolbar>
-  </ion-header>
+ 
 
   <div class="container">
     <!-- Botón de cámara (mostrar solo si no hay foto) -->
@@ -80,8 +76,8 @@
                 interface="popover">
                 <ion-select-option 
                   *ngFor="let famous of famousList" 
-                  [value]="famous._id">
-                  {{ famous.name }}
+                  [value]="famous.id">
+                  {{ famous.nombre }}
                 </ion-select-option>
               </ion-select>
               <ion-label position="stacked">Famoso *</ion-label>

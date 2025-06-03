@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
+import { FamousService, Famous } from '../famous.service';
 
 interface TagData {
   user_id: string;
@@ -13,10 +14,6 @@ interface TagData {
   lng?: number;
 }
 
-interface Famous {
-  _id: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-tag',
@@ -27,8 +24,8 @@ interface Famous {
 export class TagPage implements OnInit {
   @ViewChild('photoPreview', { static: false }) photoPreview!: ElementRef<HTMLImageElement>;
 
-  private api = `${environment.apiUrl}/sitios`;
-  private famousApi = `${environment.apiUrl}/famous`; // Asumiendo que tienes este endpoint
+  private api = `${environment.apiUrl}`;
+  private famousApi = `${environment.apiUrl}/famosos`; // Asumiendo que tienes este endpoint
 
   // Estado de la aplicación
   capturedPhoto: string | null = null;
@@ -45,11 +42,12 @@ export class TagPage implements OnInit {
   // Usuario actual (deberías obtenerlo del servicio de autenticación)
   currentUserId: string = ''; // Implementar según tu sistema de auth
 
-  constructor(
+   constructor(
     private http: HttpClient,
     private alertController: AlertController,
     private loadingController: LoadingController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private famousService: FamousService // Inyecta el servicio aquí
   ) {}
 
   ngOnInit() {
@@ -61,8 +59,15 @@ export class TagPage implements OnInit {
   // Cargar lista de famosos
   async loadFamousList() {
     try {
-      const response = await this.http.get<Famous[]>(this.famousApi).toPromise();
-      this.famousList = response || [];
+      this.famousService.getAll().subscribe({
+        next: (response) => {
+          this.famousList = response || [];
+        },
+        error: (error) => {
+          console.error('Error loading famous list:', error);
+          this.showToast('Error cargando lista de famosos', 'danger');
+        }
+      });
     } catch (error) {
       console.error('Error loading famous list:', error);
       this.showToast('Error cargando lista de famosos', 'danger');
