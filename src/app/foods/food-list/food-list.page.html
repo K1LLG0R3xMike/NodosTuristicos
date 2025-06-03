@@ -1,13 +1,60 @@
-<ion-header [translucent]="true">
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>food-list</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Platos Típicos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">food-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="content-container">
+    <h1 class="section-title">Platos Típicos</h1>
+    <p class="section-subtitle">Explora la gastronomía local de diferentes ciudades</p>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando platos...</p>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadDishes()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="!isLoading && !error && dishes.length === 0" class="empty-state">
+      <ion-icon name="restaurant-outline" class="empty-icon"></ion-icon>
+      <h3>No hay platos disponibles</h3>
+      <p>Actualmente no hay platos típicos registrados.</p>
+    </div>
+
+    <ion-list *ngIf="dishes.length > 0" class="dish-list">
+      <ion-item *ngFor="let dish of dishes" detail lines="full" class="dish-item" 
+        (click)="navigateToRestaurants(dish)">
+        <ion-thumbnail slot="start" class="dish-thumbnail">
+          <ion-icon name="restaurant"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ dish.name }}</h2>
+          <p *ngIf="dish.descripcion">{{ dish.descripcion }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Fab button for admins (if needed) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -1,0 +1,64 @@
+<ion-header class="custom-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/food-list"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Restaurantes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="content-container">
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando restaurantes...</p>
+    </div>
+
+    <div *ngIf="response && !loading">
+      <h1 class="section-title">{{ response.dish.name }}</h1>
+      <p class="section-subtitle" *ngIf="response.dish.description">{{ response.dish.description }}</p>
+      <p class="section-subtitle" *ngIf="!response.dish.description">Restaurantes que ofrecen este plato típico</p>
+      
+      <div class="restaurants-count">
+        <ion-badge color="light">{{ response.sites.length }} restaurantes disponibles</ion-badge>
+      </div>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadSitesForDish()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="!loading && response && response.sites.length === 0" class="empty-state">
+      <ion-icon name="restaurant-outline" class="empty-icon"></ion-icon>
+      <h3>No hay restaurantes disponibles</h3>
+      <p>No se encontraron restaurantes que sirvan este plato.</p>
+    </div>
+
+    <ion-list *ngIf="response && response.sites && response.sites.length > 0" class="restaurant-list">
+      <ion-item *ngFor="let siteInfo of response?.sites || []" lines="full" class="restaurant-item">
+        <ion-thumbnail slot="start" class="restaurant-thumbnail">
+          <ion-icon [name]="getIconForType(siteInfo.site.type)"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ siteInfo.site.name }}</h2>
+          <p class="restaurant-type">{{ siteInfo.site.type }}</p>
+          <p class="dish-price">Precio: ${{ siteInfo.precio.toLocaleString() }}</p>
+        </ion-label>
+        <div class="actions-container" slot="end">
+          <ion-button fill="clear" color="primary" (click)="openMap(siteInfo.site)">
+            <ion-icon name="location-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="primary" *ngIf="siteInfo.site.qr_code" (click)="showQR(siteInfo.site)">
+            <ion-icon name="qr-code-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

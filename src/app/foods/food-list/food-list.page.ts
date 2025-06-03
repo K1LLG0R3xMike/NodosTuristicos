@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
-
+import { FoodService, Dish } from '../food.service';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-food-list',
   templateUrl: './food-list.page.html',
@@ -9,24 +9,53 @@ import { environment } from 'src/environments/environment';
   standalone: false
 })
 export class FoodListPage implements OnInit {
+  dishes: Dish[] = [];
+  isLoading = true;
+  error: string | null = null;
 
-  private api = `${environment.apiUrl}/sitios`;
+  constructor(
+    private foodService: FoodService,
+    private loadingCtrl: LoadingController,
+    private router: Router
+  ) {}
 
-  constructor(private http: HttpClient) {}
-
-  getAll() {
-    return this.http.get(this.api);
+  async ngOnInit() {
+    await this.loadDishes();
   }
 
-  getById(id: string) {
-    return this.http.get(`${this.api}/${id}`);
+  async loadDishes() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Cargando platos...',
+      spinner: 'bubbles'
+    });
+    await loading.present();
+
+    try {
+      this.dishes = (await this.foodService.getAll().toPromise()) ?? [];
+      this.error = null;
+    } catch (err) {
+      this.error = 'No se pudieron cargar los platos. Por favor intente más tarde.';
+      console.error('Error al cargar platos:', err);
+    } finally {
+      this.isLoading = false;
+      loading.dismiss();
+    }
   }
 
-  create(data: any) {
-    return this.http.post(this.api, data);
+  async doRefresh(event: any) {
+    try {
+      this.dishes = (await this.foodService.getAll().toPromise()) ?? [];
+      this.error = null;
+    } catch (err) {
+      this.error = 'No se pudieron actualizar los platos.';
+    } finally {
+      event.target.complete();
+    }
   }
-
-  ngOnInit() {
+  
+  navigateToRestaurants(dish: Dish) {
+    this.router.navigate(['/restaurants-list'], {
+      queryParams: { dishId: dish.id }
+    });
   }
-
 }

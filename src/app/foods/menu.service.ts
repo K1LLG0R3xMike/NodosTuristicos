@@ -12,6 +12,29 @@ export interface MenuEntry {
   updatedAt?: string;
 }
 
+export interface SiteInfo {
+  site: {
+    name: string;
+    type: string;
+    lat: number;
+    lng: number;
+    qr_code: string;
+    id: string;
+  };
+  precio: number;
+}
+
+export interface DishInfo {
+  name: string;
+  description: string;
+  id: string;
+}
+
+export interface DishSitesResponse {
+  dish: DishInfo;
+  sites: SiteInfo[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,38 +43,33 @@ export class MenuService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todos los registros del menú
+  // Métodos existentes...
   getAll(): Observable<MenuEntry[]> {
     return this.http.get<MenuEntry[]>(this.apiUrl);
   }
 
-  // Obtener menú por ID
   getById(id: string): Observable<MenuEntry> {
     return this.http.get<MenuEntry>(`${this.apiUrl}/${id}`);
   }
 
-  // Crear una entrada en el menú (solo admin)
   create(data: MenuEntry): Observable<MenuEntry> {
     return this.http.post<MenuEntry>(this.apiUrl, data);
   }
 
-  // Actualizar el precio del plato en ese sitio
   update(id: string, data: Partial<MenuEntry>): Observable<MenuEntry> {
     return this.http.put<MenuEntry>(`${this.apiUrl}/${id}`, data);
   }
 
-  // Eliminar una entrada de menú
   delete(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  // Obtener todos los platos ofrecidos en un sitio
   getBySite(siteId: string): Observable<MenuEntry[]> {
     return this.http.get<MenuEntry[]>(`${this.apiUrl}/sitio/${siteId}`);
   }
 
-  // Obtener todos los sitios que ofrecen un plato específico
-  getByDish(dishId: string): Observable<MenuEntry[]> {
-    return this.http.get<MenuEntry[]>(`${this.apiUrl}/plato/${dishId}`);
+  // Método actualizado
+  getByDish(dishId: string): Observable<DishSitesResponse> {
+    return this.http.get<DishSitesResponse>(`${this.apiUrl}/plato/${dishId}`);
   }
 }
