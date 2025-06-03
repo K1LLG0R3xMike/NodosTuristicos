@@ -85,6 +85,10 @@ const routes: Routes = [
     path: 'custom-query2',
     loadChildren: () => import('./statistics/custom-query2/custom-query2.module').then( m => m.CustomQuery2PageModule)
   },
+  {
+    path: 'restaurants-list',
+    loadChildren: () => import('./foods/restaurants-list/restaurants-list.module').then( m => m.RestaurantsListPageModule)
+  },
 ];
 
 @NgModule({
