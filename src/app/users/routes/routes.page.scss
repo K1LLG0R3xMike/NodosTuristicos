@@ -1,0 +1,25 @@
+.map-content {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
+  /* No uses position absolute aquí */
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  position: absolute;
+  top: 56px; // Ajusta según la altura real de tu header
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 56px);
+  z-index: 1;
+  background: #fff; // Opcional, para evitar fondo negro mientras carga
+}
+
+ion-header {
+  position: fixed;
+  width: 100vw;
+  z-index: 10;
+}
