@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
+import { AppUser } from '../user.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 export class ProfilePage implements OnInit {
 
   private api = `${environment.apiUrl}/sitios`;
-  user: { nombre: string; email: string } = { nombre: 'Usuario', email: 'usuario@email.com' };
+  user: AppUser | null = null;
 
   constructor(
     private http: HttpClient,
@@ -31,8 +32,19 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
-    // Aquí puedes cargar los datos reales del usuario si tienes un servicio de auth
-    // this.user = this.authService.getCurrentUser();
+   const userData = this.authService.getUserData();
+    if (!userData || !userData.id) {
+      // Redirigir al usuario a la página de inicio de sesión o mostrar un mensaje de error
+      this.router.navigate(['/login']);
+      return;
+    }
+    // Cargar el perfil del usuario
+    this.user = {
+      id: userData.id,
+      email: userData.email,
+      nombre: userData.nombre,
+      role: userData.role || 'USER',
+    };
   }
 
   getAll() {
