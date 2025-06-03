@@ -111,6 +111,31 @@ ion-list {
   animation: spin 1s linear infinite;
 }
 
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  margin: 20px;
+  
+  .empty-icon {
+    font-size: 5rem;
+    color: #ffffff; /* Changed from var(--ion-color-medium) to white */
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    color: #ffffff; /* Changed from var(--ion-color-dark) to white */
+    margin-bottom: 8px;
+  }
+  
+  p {
+    color: #ffffff; /* Changed from var(--ion-color-medium) to white */
+  }
+}
+
 .thumbnail-container {
   width: 60px;
   height: 60px;

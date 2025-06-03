@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   selector: 'app-visit-list',
   templateUrl: './visit-list.page.html',
   styleUrls: ['./visit-list.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class VisitListPage implements OnInit {
   visitas: Visit[] = [];
@@ -26,11 +26,12 @@ export class VisitListPage implements OnInit {
   isLoadingLocation = false;
   sites: any[] = [];
 
-  constructor(private visitService: VisitService,
+  constructor(
+    private visitService: VisitService,
     private authService: AuthService,
     private router: Router,
     private siteService: SiteService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadVisitas();
@@ -51,7 +52,7 @@ export class VisitListPage implements OnInit {
       error: (error) => {
         console.error('Error al cargar sitios:', error);
         alert('Error al cargar los sitios');
-      }
+      },
     });
   }
 
@@ -61,16 +62,25 @@ export class VisitListPage implements OnInit {
       this.visitService.getByUser(userData.id).subscribe({
         next: (visitas) => {
           console.log('Visitas cargadas:', visitas);
-          this.visitas = visitas;
+
+          // Ensure visitas is always an array
+          if (Array.isArray(visitas)) {
+            this.visitas = visitas;
+          } else {
+            console.warn('API returned non-array response:', visitas);
+            this.visitas = []; // Set to empty array if response is not an array
+          }
         },
         error: (error) => {
           console.error('Error al cargar visitas:', error);
           alert('Error al cargar las visitas');
-        }
+          this.visitas = []; // Ensure array on error too
+        },
       });
     } else {
       console.error('No se pudo obtener el ID del usuario');
       alert('No se pudo obtener el ID del usuario');
+      this.visitas = []; // Ensure array on error too
     }
   }
 
@@ -95,14 +105,16 @@ export class VisitListPage implements OnInit {
     try {
       const coordinates = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
-        timeout: 10000
+        timeout: 10000,
       });
 
       this.newVisit.lat = coordinates.coords.latitude;
       this.newVisit.lng = coordinates.coords.longitude;
     } catch (error) {
       console.error('Error obteniendo ubicación:', error);
-      alert('No se pudo obtener la ubicación. Verifica los permisos de geolocalización.');
+      alert(
+        'No se pudo obtener la ubicación. Verifica los permisos de geolocalización.'
+      );
     } finally {
       this.isLoadingLocation = false;
     }
@@ -114,7 +126,7 @@ export class VisitListPage implements OnInit {
         quality: 70,
         allowEditing: false,
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Camera
+        source: CameraSource.Camera,
       });
 
       if (image.dataUrl) {
@@ -161,7 +173,7 @@ export class VisitListPage implements OnInit {
           site_id: '',
           fecha_visita: new Date().toISOString(),
           lat: 0,
-          lng: 0
+          lng: 0,
         };
         this.imageFile = null;
         this.imagePreview = null;
@@ -169,7 +181,7 @@ export class VisitListPage implements OnInit {
       error: (error) => {
         console.error('Error al crear la visita:', error);
         alert('Error al crear la visita');
-      }
+      },
     });
   }
 
