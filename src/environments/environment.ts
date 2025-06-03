@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3051/api',
+  apiUrl: 'https://back-movilpaises.onrender.com/api',
 };
 
 /*

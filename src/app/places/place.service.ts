@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface Site {
+  _id?: string; // <-- agrega esto
   id?: string;
   city_id: string;
   name: string;
