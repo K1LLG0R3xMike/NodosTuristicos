@@ -10,16 +10,29 @@ import { LocalDataService } from 'src/app/core/storage.service';
   standalone: false
 })
 export class FavoritesPage implements OnInit {
-  favoriteSites: Site[] = [];
+  favoriteSites: any[] = [];
+  isLoading = false;
+  error: string | null = null;
 
   constructor(
     private siteService: SiteService,
     private localData: LocalDataService
   ) {}
 
-  async ngOnInit() {
-    const allSites = await this.siteService.getAll().toPromise();
-    const favIds = await this.localData.getFavorites();
-    this.favoriteSites = (allSites ?? []).filter(site => site.id !== undefined && favIds.includes(site.id as string));
+  ngOnInit() {
+    this.loadFavorites();
+  }
+
+  async loadFavorites() {
+    this.isLoading = true;
+    this.error = null;
+    try {
+      const allSites = await this.siteService.getAll().toPromise();
+      const favIds = await this.localData.getFavorites();
+      this.favoriteSites = (allSites ?? []).filter(site => site.id !== undefined && favIds.includes(site.id as string));
+    } catch (err) {
+      this.error = 'No se pudieron cargar los favoritos.';
+    }
+    this.isLoading = false;
   }
 }

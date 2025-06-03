@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 })
 export class VisitListPage implements OnInit {
   visitas: Visit[] = [];
+  isLoading = false;
+  error: string | null = null;
   showForm = false;
   newVisit: Visit = {
     user_id: '',
@@ -56,31 +58,37 @@ export class VisitListPage implements OnInit {
     });
   }
 
+  doRefresh(event: any) {
+    this.loadVisitas();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+
+  loadVisits() {
+    this.loadVisitas();
+  }
+
   loadVisitas() {
+    this.isLoading = true;
+    this.error = null;
     const userData = this.authService.getUserData();
     if (userData && userData.id) {
       this.visitService.getByUser(userData.id).subscribe({
         next: (visitas) => {
-          console.log('Visitas cargadas:', visitas);
-
-          // Ensure visitas is always an array
-          if (Array.isArray(visitas)) {
-            this.visitas = visitas;
-          } else {
-            console.warn('API returned non-array response:', visitas);
-            this.visitas = []; // Set to empty array if response is not an array
-          }
+          this.visitas = Array.isArray(visitas) ? visitas : [];
+          this.isLoading = false;
         },
         error: (error) => {
-          console.error('Error al cargar visitas:', error);
-          alert('Error al cargar las visitas');
-          this.visitas = []; // Ensure array on error too
+          this.error = 'Error al cargar las visitas';
+          this.visitas = [];
+          this.isLoading = false;
         },
       });
     } else {
-      console.error('No se pudo obtener el ID del usuario');
-      alert('No se pudo obtener el ID del usuario');
-      this.visitas = []; // Ensure array on error too
+      this.error = 'No se pudo obtener el ID del usuario';
+      this.visitas = [];
+      this.isLoading = false;
     }
   }
 

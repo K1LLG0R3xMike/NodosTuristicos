@@ -1,36 +1,60 @@
-<ion-header>
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>Sitios turísticos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Sitios turísticos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-list *ngIf="site.length > 0; else noPlaces">
-    <ion-item *ngFor="let s of site">
-      <ion-label>
-        <h2>{{ s.name }}</h2>
-        <p>Tipo: {{ s.type }}</p>
-        <p>Lat: {{ s.lat }}, Lng: {{ s.lng }}</p>
-      </ion-label>
+<ion-content>
+  <div class="content-container">
+    <h1 class="section-title">Sitios turísticos</h1>
+    <p class="section-subtitle">Explora los lugares turísticos de la ciudad</p>
 
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando sitios...</p>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadPlaces()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="!isLoading && !error && site.length === 0" class="empty-state">
+      <ion-icon name="location-outline" class="empty-icon"></ion-icon>
+      <h3>No hay sitios registrados</h3>
+      <p>Actualmente no hay sitios turísticos registrados para esta ciudad.</p>
+    </div>
+
+    <ion-list *ngIf="site.length > 0" class="dish-list">
+      <ion-item *ngFor="let s of site" detail lines="full" class="dish-item">
+        <ion-thumbnail slot="start" class="dish-thumbnail">
+          <ion-icon name="location"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ s.name }}</h2>
+          <p>Tipo: {{ s.type }}</p>
+          <p>Lat: {{ s.lat }}, Lng: {{ s.lng }}</p>
+        </ion-label>
         <ion-button
           fill="outline"
           (click)="toggleFavorite(s.id!)"
-          color=" {{ isFavorite(s.id!) ? 'danger' : 'medium' }}"
-        >
+          [color]="isFavorite(s.id!) ? 'danger' : 'medium'">
           <ion-icon
             [name]="isFavorite(s.id!) ? 'heart' : 'heart-outline'"
             [color]="isFavorite(s.id!) ? 'danger' : 'medium'"
-            slot="start"
-          ></ion-icon>
+            slot="start">
+          </ion-icon>
           {{ isFavorite(s.id!) ? 'Favorito' : 'Añadir a favoritos' }}
         </ion-button>
-    </ion-item>
-  </ion-list>
-
-  <ng-template #noPlaces>
-    <ion-text color="medium">
-      <p>No hay sitios registrados para esta ciudad.</p>
-    </ion-text>
-  </ng-template>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

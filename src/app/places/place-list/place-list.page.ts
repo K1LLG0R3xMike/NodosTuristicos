@@ -13,10 +13,11 @@ import { LocalDataService } from 'src/app/core/storage.service';
   standalone: false
 })
 export class PlaceListPage implements OnInit {
-
-  site: Site[] = [];
+  site: any[] = [];
   cityId: string = '';
   favorites: string[] = [];
+  isLoading = false;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,6 +33,17 @@ export class PlaceListPage implements OnInit {
       }
     });
     this.loadFavorites();
+  }
+
+  async loadPlaces() {
+    this.isLoading = true;
+    this.error = null;
+    try {
+      this.site = []; // Simulación, reemplaza por tu lógica real
+    } catch (err) {
+      this.error = 'No se pudieron cargar los sitios turísticos.';
+    }
+    this.isLoading = false;
   }
 
   loadPlacesByCity() {

@@ -8,6 +8,19 @@
   margin: 0;
 }
 
+.custom-header {
+  ion-toolbar {
+    --background: rgba(19, 84, 122, 0.95);
+    --color: #ffffff;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+}
+
 #map {
   position: absolute;
   top: 56px; // Ajusta según la altura real de tu header

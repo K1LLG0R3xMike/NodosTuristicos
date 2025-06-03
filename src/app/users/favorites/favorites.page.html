@@ -1,22 +1,48 @@
-<ion-header>
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>Favoritos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Favoritos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-list *ngIf="favoriteSites.length > 0; else noFavs">
-    <ion-item *ngFor="let site of favoriteSites">
-      <ion-label>
-        <h2>{{ site.name }}</h2>
-        <p>{{ site.type }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+<ion-content>
+  <div class="content-container">
+    <h1 class="section-title">Sitios Favoritos</h1>
+    <p class="section-subtitle">Tus lugares turísticos preferidos</p>
 
-  <ng-template #noFavs>
-    <ion-text color="light">
-      <p>No tienes sitios guardados como favoritos.</p>
-    </ion-text>
-  </ng-template>
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando favoritos...</p>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadFavorites()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="!isLoading && !error && favoriteSites.length === 0" class="empty-state">
+      <ion-icon name="heart-outline" class="empty-icon"></ion-icon>
+      <h3>No tienes favoritos</h3>
+      <p>Aún no has guardado sitios como favoritos.</p>
+    </div>
+
+    <ion-list *ngIf="favoriteSites.length > 0" class="dish-list">
+      <ion-item *ngFor="let site of favoriteSites" detail lines="full" class="dish-item">
+        <ion-thumbnail slot="start" class="dish-thumbnail">
+          <ion-icon name="heart"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ site.name }}</h2>
+          <p>{{ site.type }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
