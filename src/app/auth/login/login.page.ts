@@ -39,7 +39,12 @@ export class LoginPage implements OnInit {
             };
             await this.authService.setUserData(userData);
             console.log('Login successful', userData);
-            this.router.navigate(['/home']);
+            // Redirige según el rol
+            if (userData.role === 'ADMIN') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/home']);
+            }
           }
         },
         error: (error) => {
