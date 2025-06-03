@@ -1,77 +1,108 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Inicio</ion-title>
+<ion-header class="custom-header">
+  <ion-toolbar color="transparent">
+    <ion-title class="header-title">Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <h2>Bienvenido {{ getFirstName() }}👋</h2>
-  <ion-grid>
-    <ion-row>
+  <div class="welcome-section">
+    <div class="welcome-text">
+      <h2>Bienvenido {{ getFirstName() }}</h2>
+      <div class="wave-emoji">👋</div>
+    </div>
+    <p class="welcome-subtitle">Explora y descubre lugares increíbles</p>
+  </div>
+
+  <ion-grid class="main-grid">
+    <ion-row class="menu-row">
       <ion-col size="6">
-        <ion-card routerLink="/country-list">
+        <ion-card routerLink="/country-list" class="menu-card countries-card">
+          <div class="card-icon">
+            <ion-icon name="earth-outline"></ion-icon>
+          </div>
           <ion-card-header>
             <ion-card-title>Países</ion-card-title>
+            <ion-card-subtitle>Explora destinos</ion-card-subtitle>
           </ion-card-header>
         </ion-card>
       </ion-col>
 
-      <!-- <ion-col size="6">
-        <ion-card routerLink="">
-          <ion-card-header>
-            <ion-card-title>CAMARA</ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-col> -->
-      
-
       <ion-col size="6">
-        <ion-card routerLink="/visit-list">
+        <ion-card routerLink="/visit-list" class="menu-card visits-card">
+          <div class="card-icon">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
           <ion-card-header>
-            <ion-card-title>Mis visitas</ion-card-title>
+            <ion-card-title>Mis Visitas</ion-card-title>
+            <ion-card-subtitle>Lugares visitados</ion-card-subtitle>
           </ion-card-header>
         </ion-card>
       </ion-col>
 
-      <!--
       <ion-col size="6">
-        <ion-card routerLink="/">
-          <ion-card-header>
-        <ion-card-title>Camara</ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-col>
-      -->
-
-      <ion-col size="6">
-        <ion-card routerLink="/favorites">
+        <ion-card routerLink="/favorites" class="menu-card favorites-card">
+          <div class="card-icon">
+            <ion-icon name="heart-outline"></ion-icon>
+          </div>
           <ion-card-header>
             <ion-card-title>Favoritos</ion-card-title>
+            <ion-card-subtitle>Tus preferidos</ion-card-subtitle>
           </ion-card-header>
         </ion-card>
       </ion-col>
 
-      
+      <ion-col size="6">
+        <ion-card routerLink="/routes" class="menu-card routes-card">
+          <div class="card-icon">
+            <ion-icon name="map-outline"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Mi Ruta</ion-card-title>
+            <ion-card-subtitle>Turística</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
 
       <ion-col size="6">
-        <ion-card routerLink="/routes">
+        <ion-card routerLink="/food-list" class="menu-card routes-card">
+          <div class="card-icon">
+            <ion-icon name="restaurant-outline"></ion-icon>
+          </div>
           <ion-card-header>
-            <ion-card-title>Mi ruta turística</ion-card-title>
+            <ion-card-title>Platos</ion-card-title>
+            <ion-card-subtitle>Menu</ion-card-subtitle>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card routerLink="/profile" class="menu-card routes-card">
+          <div class="card-icon">
+            <ion-icon name="settings-outline"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>Ajustes</ion-card-title>
+
           </ion-card-header>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 16px; margin-right: 16px;">
-    <ion-fab-button color="tertiary" routerLink="/tag">
+  <!-- FAB para cámara con efecto de pulso -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="camera-fab">
+    <ion-fab-button color="tertiary" routerLink="/tag" class="pulse-animation">
       <ion-icon name="camera-outline"></ion-icon>
     </ion-fab-button>
+    <div class="fab-label">Tomar foto</div>
   </ion-fab>
 
-  <ion-fab vertical="top" horizontal="end" slot="fixed" style="padding-top: 20px; padding-right: 20px;">
-    <ion-fab-button color="danger" (click)="logout()">
-      <ion-icon name="log-out-outline"></ion-icon>
+  <!-- FAB para logout -->
+<!-- 
+ <ion-fab vertical="bottom" horizontal="start" slot="fixed" class="logout-fab">
+  <ion-fab-button color="danger" (click)="logout()" size="small">
+    <ion-icon name="log-out-outline"></ion-icon>
   </ion-fab-button>
-</ion-fab>
+    </ion-fab>
+-->
 </ion-content>

@@ -1,40 +1,127 @@
+<!-- country-list.page.html -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>Países</ion-title>
+    <ion-title>
+      <div class="header-content">
+        <ion-icon name="globe-outline" class="header-icon"></ion-icon>
+        Países
+      </div>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" >
-  <ion-list *ngIf="countries.length > 0; else noData"  style="background-color: transparent;">
+<ion-content class="ion-padding">
+  <!-- Barra de búsqueda -->
+  <div class="search-container">
+    <ion-searchbar
+      [(ngModel)]="searchTerm"
+      (ionInput)="filterCountries($event)"
+      placeholder="Buscar países o ciudades..."
+      show-clear-button="focus"
+      class="custom-searchbar"
+    ></ion-searchbar>
+  </div>
 
-    <ng-container *ngFor="let country of countries">
-      <!-- País -->
-      <ion-item
-        button
-        detail
-        (click)="toggleCountry(country.id!)"
-      >
-        {{ country.name }} ({{ country.iso }})
-      </ion-item>
+  <!-- Contador de resultados -->
+  <div class="results-count" *ngIf="filteredCountries.length > 0">
+    {{ filteredCountries.length }} {{ filteredCountries.length === 1 ? 'país encontrado' : 'países encontrados' }}
+  </div>
 
-      <!-- Ciudades del país seleccionado -->
-      <div *ngIf="expandedCountryId === country.id" class="city-dropdown" >
-        <ion-item
-          lines="none"
-          *ngFor="let city of citiesByCountry[country.id] || []"
-          (click)="goToPlaceList(city.id!)"
-          
+  <!-- Lista de países -->
+  <ion-list *ngIf="filteredCountries.length > 0; else noData" class="countries-list">
+    <ng-container *ngFor="let country of filteredCountries; trackBy: trackByCountryId">
+      
+      <!-- Tarjeta del país -->
+      <ion-card class="country-card" [class.expanded]="expandedCountryId === country.id">
+        <ion-item 
+          button 
+          detail="false"
+          (click)="toggleCountry(country.id!)"
+          class="country-header"
         >
-          <ion-label>{{ city.name }}</ion-label>
+          <div class="country-flag" slot="start">
+            <ion-icon name="flag-outline"></ion-icon>
+          </div>
+          
+          <ion-label class="country-info">
+            <h2 class="country-name">{{ country.name }}</h2>
+            <p class="country-iso">{{ country.iso }}</p>
+          </ion-label>
+          
+          <ion-icon 
+            [name]="expandedCountryId === country.id ? 'chevron-up-outline' : 'chevron-down-outline'" 
+            class="expand-icon"
+            slot="end"
+          ></ion-icon>
         </ion-item>
-      </div>
-    </ng-container>
 
+        <!-- Dropdown de ciudades -->
+        <div 
+          class="cities-dropdown" 
+          [class.show]="expandedCountryId === country.id"
+          [@slideInOut]="expandedCountryId === country.id ? 'in' : 'out'"
+        >
+          <div class="cities-container">
+            
+            <!-- Loading de ciudades -->
+            <div *ngIf="country.id && loadingCities[country.id]" class="loading-cities">
+              <ion-spinner name="crescent" color="primary"></ion-spinner>
+              <span>Cargando ciudades...</span>
+            </div>
+
+            <!-- Lista de ciudades -->
+            <ng-container *ngIf="country.id && !loadingCities[country.id]">
+              <ion-item
+                *ngFor="let city of (country.id ? citiesByCountry[country.id] : []) || []; trackBy: trackByCityId"
+                button
+                detail="false"
+                class="city-item"
+                (click)="goToPlaceList(city.id!)"
+              >
+                <div class="city-icon" slot="start">
+                  <ion-icon name="location-outline"></ion-icon>
+                </div>
+                
+                <ion-label class="city-name">{{ city.name }}</ion-label>
+                
+                <ion-icon name="chevron-forward-outline" class="city-arrow" slot="end"></ion-icon>
+              </ion-item>
+
+              <!-- No hay ciudades -->
+              <div *ngIf="country.id && citiesByCountry[country.id]?.length === 0" class="no-cities">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <span>No hay ciudades disponibles</span>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+      </ion-card>
+
+    </ng-container>
   </ion-list>
 
+  <!-- No data template -->
   <ng-template #noData>
-    <ion-text color="medium">
-      <p class="ion-padding">No se encontraron países.</p>
-    </ion-text>
+    <div class="no-data">
+      <ion-icon name="globe-outline" class="no-data-icon"></ion-icon>
+      <ion-text color="medium">
+        <h3>No se encontraron países</h3>
+        <p *ngIf="searchTerm">
+          Intenta con otros términos de búsqueda
+        </p>
+        <p *ngIf="!searchTerm">
+          No hay países disponibles en este momento
+        </p>
+      </ion-text>
+    </div>
   </ng-template>
+
+  <!-- Fab button para refresh -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="refreshCountries()">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>
