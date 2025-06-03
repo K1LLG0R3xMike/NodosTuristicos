@@ -1,13 +1,51 @@
-<ion-header [translucent]="true">
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>top-places</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Sitios más visitados</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">top-places</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="content-container">
+    <h1 class="section-title">Sitios más visitados</h1>
+    <p class="section-subtitle">Ranking de los lugares con más visitas de usuarios</p>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando estadísticas...</p>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadTopSites()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+        <!-- Antes -->
+        <!-- Antes -->
+        <!-- Después -->
+    <div *ngIf="!isLoading && !error && topSites.length === 0" class="empty-state">
+      <ion-icon name="stats-chart-outline" class="empty-icon"></ion-icon>
+      <h3>No hay datos de visitas</h3>
+      <p>Aún no hay visitas registradas en el sistema.</p>
+    </div>
+    
+    <ion-list *ngIf="topSites.length > 0" class="dish-list">
+      <ion-item *ngFor="let item of topSites; let i = index" detail lines="full" class="dish-item">
+        <ion-thumbnail slot="start" class="dish-thumbnail">
+          <ion-icon name="trophy"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ i + 1 }}. {{ item.site.name }}</h2>
+          <p>Visitas: {{ item.count }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
