@@ -1,13 +1,62 @@
-<ion-header [translucent]="true">
+<ion-header class="custom-header">
   <ion-toolbar>
-    <ion-title>famous-list</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Tags</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">famous-list</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="content-container">
+    <h1 class="section-title">Tags</h1>
+    <p class="section-subtitle">Descubre los tags de famosos en los sitios turísticos</p>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-spinner name="bubbles"></ion-spinner>
+      <p>Cargando tags...</p>
+    </div>
+
+    <ion-card *ngIf="error" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button (click)="loadTags()" expand="block" fill="clear">
+          Reintentar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="!isLoading && !error && tags.length === 0" class="empty-state">
+      <ion-icon name="pricetag-outline" class="empty-icon"></ion-icon>
+      <h3>No hay tags registrados</h3>
+      <p>Actualmente no hay tags asociados.</p>
+    </div>
+
+    <ion-list *ngIf="tags.length > 0" class="dish-list">
+      <ion-item *ngFor="let tag of tags" detail lines="full" class="dish-item"
+        (click)="navigateToTagDetail(tag)">
+        <ion-thumbnail slot="start" class="dish-thumbnail">
+          <img *ngIf="tag.foto_url" [src]="tag.foto_url" alt="Foto tag" />
+          <ion-icon *ngIf="!tag.foto_url" name="pricetag"></ion-icon>
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ tag.famous_id?.nombre || 'Famoso desconocido' }}</h2>
+          <p *ngIf="tag.user_id?.email">Creado por: {{ tag.user_id.email }}</p>
+          <p *ngIf="tag.created_at">Fecha: {{ tag.created_at | date:'medium' }}</p>
+          <p *ngIf="tag.lat && tag.lng">Ubicación: {{ tag.lat }}, {{ tag.lng }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

@@ -10,23 +10,53 @@ import { environment } from 'src/environments/environment';
 })
 export class FamousListPage implements OnInit {
 
-  private api = `${environment.apiUrl}/sitios`;
+  tags: any[] = [];
+  isLoading = false;
+  error: string | null = null;
+  private api = `${environment.apiUrl}/tags`;
 
   constructor(private http: HttpClient) {}
 
-  getAll() {
-    return this.http.get(this.api);
-  }
-
-  getById(id: string) {
-    return this.http.get(`${this.api}/${id}`);
-  }
-
-  create(data: any) {
-    return this.http.post(this.api, data);
-  }
-
   ngOnInit() {
+    this.loadTags();
   }
 
+  loadTags() {
+    this.isLoading = true;
+    this.error = null;
+    console.log('Solicitando tags desde la API:', this.api);
+
+    // Suponiendo que tienes el usuario actual en localStorage o authService
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    console.log('Datos de usuario obtenidos de localStorage:', userData);
+    const userId = userData?.id;
+    console.log('ID de usuario extraído:', userId);
+
+    this.http.get<any>(this.api).subscribe({
+      next: (data) => {
+        console.log('Tags recibidos:', data);
+        const tagsArray = Array.isArray(data) ? data : data.tags;
+        this.tags = (tagsArray ?? []).filter((tag: { user_id: { id: any; }; }) => tag.user_id?.id === userId);
+        console.log('Tags filtrados por usuario', userId, ':', this.tags);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar tags:', err);
+        this.error = 'No se pudieron cargar los tags.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  doRefresh(event: any) {
+    this.loadTags();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+
+  navigateToTagDetail(tag: any) {
+    // Implementa la navegación si tienes una página de detalle
+    // this.router.navigate(['/tag-detail', tag._id]);
+  }
 }
