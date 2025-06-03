@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { environment } from 'src/environments/environment';
+import { LocalDataService } from '../core/storage.service';
 
 export interface UserData {
   id: string;
@@ -14,7 +15,10 @@ export interface UserData {
 export class AuthService {
   private api = `${environment.apiUrl}`;
 
-  constructor(private http: HttpClient, private storage: Storage) {
+  constructor(private http: HttpClient, 
+    private storage: Storage,
+    private localDataService: LocalDataService
+  ) {
     this.storage.create();
   }
 
@@ -33,6 +37,7 @@ export class AuthService {
   async logout() {
     await this.storage.remove('token');
     await this.clearUserData();
+    this.localDataService.clearFavorites();
   }
 
   async getToken() {

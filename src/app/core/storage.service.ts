@@ -53,4 +53,8 @@ export class LocalDataService {
   async clearRoute(): Promise<void> {
     await this._storage?.remove(ROUTE_KEY);
   }
+
+  async clearFavorites(): Promise<void> {
+  await this._storage?.remove(FAVORITES_KEY);
+}
 }
