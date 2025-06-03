@@ -87,6 +87,10 @@ const routes: Routes = [
     loadChildren: () => import('./statistics/custom-query2/custom-query2.module').then( m => m.CustomQuery2PageModule)
   },
   {
+    path: 'restaurants-list',
+    loadChildren: () => import('./foods/restaurants-list/restaurants-list.module').then( m => m.RestaurantsListPageModule)
+  },
+  {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule),
     canActivate: [AdminGuard]
