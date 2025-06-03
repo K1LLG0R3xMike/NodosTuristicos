@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { FamousService, Famous } from '../famous.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { TagService, Tag } from '../tag.service'; 
 
 interface TagData {
   user_id: string;
@@ -24,8 +24,7 @@ interface TagData {
 export class TagPage implements OnInit {
   @ViewChild('photoPreview', { static: false }) photoPreview!: ElementRef<HTMLImageElement>;
 
-  private api = `${environment.apiUrl}`;
-  private famousApi = `${environment.apiUrl}/famosos`; // Asumiendo que tienes este endpoint
+
 
   // Estado de la aplicación
   capturedPhoto: string | null = null;
@@ -40,20 +39,27 @@ export class TagPage implements OnInit {
   famousList: Famous[] = [];
   
   // Usuario actual (deberías obtenerlo del servicio de autenticación)
-  currentUserId: string = ''; // Implementar según tu sistema de auth
+  currentUserId: string = ''; 
 
    constructor(
-    private http: HttpClient,
-    private alertController: AlertController,
-    private loadingController: LoadingController,
-    private toastController: ToastController,
-    private famousService: FamousService // Inyecta el servicio aquí
-  ) {}
+  private alertController: AlertController,
+  private loadingController: LoadingController,
+  private toastController: ToastController,
+  private famousService: FamousService,
+  private authService: AuthService,
+  private tagService: TagService // Inyectar el servicio de tags
+) {}
 
   ngOnInit() {
     this.loadFamousList();
     this.getCurrentLocation();
     this.getCurrentUser();
+    const user = this.authService.getUserData?.();
+    if (user) {
+      this.currentUserId = user.id;
+    } else {
+      console.warn('No user logged in');
+    }
   }
 
   // Cargar lista de famosos
@@ -148,68 +154,51 @@ export class TagPage implements OnInit {
 
   // Guardar tag
   async saveTag() {
-    if (!this.capturedPhoto || !this.selectedFamous) {
-      this.showToast('Foto y famoso son requeridos', 'warning');
-      return;
-    }
-
-    if (!this.currentUserId) {
-      this.showToast('Usuario no identificado', 'danger');
-      return;
-    }
-
-    const loading = await this.loadingController.create({
-      message: 'Guardando tag...'
-    });
-    await loading.present();
-
-    try {
-      // Convertir imagen a base64 si es necesario o subirla a un servicio
-      const photoUrl = await this.uploadPhoto(this.capturedPhoto);
-
-      const tagData: TagData = {
-        user_id: this.currentUserId,
-        famous_id: this.selectedFamous,
-        comentario: this.comment || undefined,
-        foto_url: photoUrl,
-        lat: this.currentLocation?.lat,
-        lng: this.currentLocation?.lng
-      };
-
-      await this.create(tagData).toPromise();
-      
-      await loading.dismiss();
-      this.showToast('Tag guardado exitosamente', 'success');
-      
-      // Limpiar formulario
-      this.resetForm();
-
-    } catch (error) {
-      await loading.dismiss();
-      console.error('Error saving tag:', error);
-      this.showToast('Error al guardar el tag', 'danger');
-    }
+  // Validaciones
+  if (!this.capturedPhoto || !this.selectedFamous) {
+    this.showToast('Foto y famoso son requeridos', 'warning');
+    return;
   }
 
-  // Subir foto (implementar según tu backend)
-  private async uploadPhoto(photoDataUrl: string): Promise<string> {
-    // Aquí deberías implementar la lógica para subir la foto
-    // Por ejemplo, convertir a blob y enviar a un endpoint de upload
-    try {
-      const response = await fetch(photoDataUrl);
-      const blob = await response.blob();
-      
-      const formData = new FormData();
-      formData.append('photo', blob, 'tag-photo.jpg');
-      
-      const uploadResponse = await this.http.post<{url: string}>(`${environment.apiUrl}/upload`, formData).toPromise();
-      return uploadResponse?.url || photoDataUrl;
-      
-    } catch (error) {
-      console.error('Error uploading photo:', error);
-      return photoDataUrl; // Fallback a data URL
-    }
+  if (!this.currentUserId) {
+    this.showToast('Usuario no identificado', 'danger');
+    return;
   }
+
+  const loading = await this.loadingController.create({
+    message: 'Guardando tag...'
+  });
+  await loading.present();
+
+  try {
+    // Convertir dataURL a Blob
+    const response = await fetch(this.capturedPhoto);
+    const blob = await response.blob();
+
+    // Crear objeto tag con los datos del formulario
+    const tagData: Tag = {
+      user_id: this.currentUserId,
+      famous_id: this.selectedFamous,
+      comentario: this.comment || undefined,
+      // No incluimos foto_url aquí, ya que se enviará como blob
+      lat: this.currentLocation?.lat,
+      lng: this.currentLocation?.lng
+    };
+
+    // Usar el servicio para crear el tag con la foto
+    await this.tagService.create(tagData, blob).toPromise();
+    
+    await loading.dismiss();
+    this.showToast('Tag guardado exitosamente', 'success');
+    
+    // Limpiar formulario
+    this.resetForm();
+  } catch (error) {
+    await loading.dismiss();
+    console.error('Error saving tag:', error);
+    this.showToast('Error al guardar el tag', 'danger');
+  }
+}
 
   // Limpiar formulario
   private resetForm() {
@@ -228,18 +217,5 @@ export class TagPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
-  }
-
-  // Métodos HTTP existentes
-  getAll() {
-    return this.http.get(`${this.api}/tags`);
-  }
-
-  getById(id: string) {
-    return this.http.get(`${this.api}/tags/${id}`);
-  }
-
-  create(data: TagData) {
-    return this.http.post(`${this.api}/tags`, data);
   }
 }

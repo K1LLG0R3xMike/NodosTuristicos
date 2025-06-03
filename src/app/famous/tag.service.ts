@@ -22,27 +22,42 @@ export class TagService {
 
   constructor(private http: HttpClient) {}
 
-  // Crear una nueva etiqueta (tag)
-  create(tag: Tag): Observable<Tag> {
-    return this.http.post<Tag>(this.apiUrl, tag);
+  // Método modificado para soportar subida de archivos
+  create(tag: Tag, imageFile?: File | Blob): Observable<Tag> {
+    // Si no hay imagen, usar el método HTTP regular
+    if (!imageFile) {
+      return this.http.post<Tag>(this.apiUrl, tag);
+    }
+    
+    // Si hay imagen, usar FormData
+    const formData = new FormData();
+    
+    // Añadir todos los campos del tag
+    (Object.keys(tag) as (keyof Tag)[]).forEach(key => {
+      if (tag[key] !== undefined && tag[key] !== null) {
+        formData.append(key as string, tag[key]!.toString());
+      }
+    });
+    
+    // Añadir la imagen con nombre 'foto' (debe coincidir con el backend)
+    formData.append('foto', imageFile, 'tag-photo.jpg');
+    
+    return this.http.post<Tag>(this.apiUrl, formData);
   }
 
-  // Obtener todas las etiquetas
+  // Los otros métodos quedan igual
   getAll(): Observable<Tag[]> {
     return this.http.get<Tag[]>(this.apiUrl);
   }
 
-  // Obtener etiquetas de un personaje famoso específico
   getByFamousId(famousId: string): Observable<Tag[]> {
     return this.http.get<Tag[]>(`${this.apiUrl}/famoso/${famousId}`);
   }
 
-  // Obtener etiquetas de un usuario específico
   getByUserId(userId: string): Observable<Tag[]> {
     return this.http.get<Tag[]>(`${this.apiUrl}/usuario/${userId}`);
   }
 
-  // Eliminar una etiqueta
   delete(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
